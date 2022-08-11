@@ -2,10 +2,11 @@
   "name": "todo",
   "version": "1.0.0",
   "description": "Todo list project, an advanched vanlia JS project using concepts such as the revealing moudle pattern, OOP S.O.L.I.D princiaples, pubsub and bootstrap.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "start": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "web": "webpack serve --mode development"
   },
   "repository": {
     "type": "git",
@@ -18,12 +19,18 @@
   },
   "homepage": "https://github.com/oxedom/todo#readme",
   "devDependencies": {
+    "autoprefixer": "^10.4.8",
     "css-loader": "^6.7.1",
-    "style-loader": "^3.3.1"
+    "postcss-loader": "^7.0.1",
+    "sass": "^1.54.4",
+    "sass-loader": "^13.0.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.10.0"
   },
   "dependencies": {
-    "date-fns": "^2.29.1",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "bootstrap": "^5.2.0",
+    "date-fns": "^2.29.1"
   }
 }
