@@ -2,7 +2,6 @@
   "name": "todo",
   "version": "1.0.0",
   "description": "Todo list project, an advanched vanlia JS project using concepts such as the revealing moudle pattern, OOP S.O.L.I.D princiaples, pubsub and bootstrap.",
-  "main": "main.js",
   "scripts": {
     "start": "webpack",
     "watch": "webpack --watch",

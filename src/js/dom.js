@@ -1,12 +1,9 @@
 
 export default
     (function () {
-
+        alert('a')
         //Hook for for content
         let content = document.getElementById('content')
-
-        Creation of UI
-
         //Header
         const header = function () {
 
