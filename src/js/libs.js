@@ -17,7 +17,7 @@ export function libs(){
 
     function stringToClass (element,string) {
         let arr = splitString(string)
-        classAdder(element,ar)
+        classAdder(element,arr)
     }
 
     function getID() {
