@@ -42,7 +42,8 @@ export default
         document.addEventListener('DOMContentLoaded', () => {
             content.append(header())
 
-        }
-          
+
+
+        })
     })()
 
