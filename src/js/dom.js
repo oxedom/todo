@@ -19,7 +19,7 @@ export default
             a.href = 'www.google.com'
 
             return header
-        }()
+        }
 
 
         const main = function () {
@@ -34,12 +34,15 @@ export default
         }()
 
 
-        content.append(header, main)
+
         // (function () {
 
         //     }())
 
+        document.addEventListener('DOMContentLoaded', () => {
+            content.append(header())
 
-
+        }
+          
     })()
 

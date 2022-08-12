@@ -52,3 +52,22 @@ Dom moudle () {
 
 npm i date-fns
 webstorage api
+
+//Pesdocode 
+There will be a DOM object that is incharge of rendering the following:
+Navbar (On Load)
+UI Interface on load 
+    Left hand side navbar  
+        lists projects
+        +Button that opens a popup
+            "NEW PROJECT OR TODO"
+    Main content 
+        A list of all the todos by clicked Project (minimum detalis)
+            Each Todo expands with all detatils
+
+Factory Function for Project
+Factory FUnction for Todo
+Moudle DOM object.
+Moudle Logic Object
+Moudle App Logic
+        
