@@ -25,6 +25,8 @@ export default function nav(){
     libsHelper.stringToClass(div,divClass)
     libsHelper.stringToClass(a,aClass)
 
+    //Add Text Content
+    a.innerText= 'Todolist'
 
     div.append(a)
     nav.append(div)
