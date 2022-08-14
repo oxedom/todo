@@ -18,11 +18,22 @@ export default function sidebar() {
 
     const form = document.createElement('form')
     const formDiv = document.createElement('div')
+
+    const formTask = document.createElement('form')
+    const formTaskDiv = document.createElement('div')
+    const taskSubmitBtn = document.createElement('button')
+    const taskInput = document.createElement('input')
+    const taskTextArea = document.createElement('area')
+
+
+
     const input = document.createElement('input')
     const submitBtn = document.createElement('button')
     //Divder
     const divDivde = document.createElement('div');
-    const btn = document.createElement('button');
+    const btnProject = document.createElement('button');
+    const btnTask = document.createElement('button');
+
 
     //CLASS STRING FROM HTML BOILER PLATE
     const divSidebarClass = 'd-flex flex-column flex-shrink-0 p-3 bg-light col-3 border'
@@ -32,13 +43,13 @@ export default function sidebar() {
     // const hrClass = ''
     const ulClass = 'nav nav-pills flex-column mb-auto'
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
-    const btnClass = 'btn btn-primay'
+    const btnProjectClass = 'btn btn-primay'
+    const btnTaskClass = 'btn btn-primay m-2'
     const formClass = 'form-group m-2 p-1 input-group d-none'
     const inputClass = 'form-control'
     const submitBtnClass = 'btn btn-outline-primary'
-
-
-
+    const formTaskClass = 'form-group m-2 p-1 input-group d-none'
+    const formTaskDivClass = 'd-flex justify-content-center'
 
     libsHelper.stringToClass(divSidebar, divSidebarClass)
     libsHelper.stringToClass(img, imgClass)
@@ -47,35 +58,65 @@ export default function sidebar() {
     // libsHelper.stringToClass(hr, hrClass)
     libsHelper.stringToClass(ul, ulClass)
     libsHelper.stringToClass(divDivde, divDivdeClass)
-    libsHelper.stringToClass(btn, btnClass)
+    libsHelper.stringToClass(btnProject, btnProjectClass)
+    libsHelper.stringToClass(btnTask, btnTaskClass)
     libsHelper.stringToClass(form, formClass)
+    libsHelper.stringToClass(formTask, formTaskClass)
+    libsHelper.stringToClass(formTaskDiv, formTaskDivClass)
+
     libsHelper.stringToClass(input, inputClass)
     libsHelper.stringToClass(submitBtn, submitBtnClass)
+    libsHelper.stringToClass(taskSubmitBtn, submitBtnClass)
+    libsHelper.stringToClass(taskInput, inputClass)
+
+
 
     divSidebar.style = 'width: 280px;'
     span.innerText = 'Projects'
     img.style = 'width: 30px'
-    btn.innerText = '+ New Project'
+    btnProject.innerText = '+ New Project'
+    btnTask.innerText = '+ Task'
     formDiv.style = 'width: 150px;'
-    submitBtn.innerText = 'Add'
+    formTaskDiv.style = 'width: 200px'
+    submitBtn.innerText = '+'
+    taskSubmitBtn.innerText = '+'
 
+    input.setAttribute('placeholder', 'New Project')
+    taskInput.setAttribute('placeholder', 'New Task')
 
     img.setAttribute('src', '../sandbox/public/todo.svg')
     form.setAttribute('action', 'submit')
     form.setAttribute('id', 'form')
+    formTask.setAttribute('action', 'submit')
+    formTask.setAttribute('id', 'formTask')
+    formTask.setAttribute('name', 'taskForm')
+    taskInput.setAttribute('name', 'taskName')
     input.setAttribute('name', 'name')
 
     form.addEventListener('submit', (e) => {
         e.preventDefault()
-        let value = e.target[1].value
-        pubsub.publish('liSubmit', value)
+        let data = libsHelper.getFormData(e)
+        pubsub.publish('liSubmit', data)
         form.reset()
     })
 
 
+    formTask.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let data = libsHelper.getFormData(e)
+        pubsub.publish('newTask', data)
+        console.log(data);
+        formTask.reset()
+    })
 
-    btn.addEventListener('click', (e) => {
+
+
+    btnProject.addEventListener('click', (e) => {
         pubsub.publish('toogleForm', 'form')
+    })
+
+    btnTask.addEventListener('click', (e) => {
+        pubsub.publish('toogleForm', 'formTask')
     })
 
     function toogleElement(id) {
@@ -90,6 +131,7 @@ export default function sidebar() {
     }
 
     pubsub.subscribe('toogleForm', toogleElement)
+    pubsub.subscribe('toogleTask', toogleElement)
 
     pubsub.subscribe('liSubmit', createLi)
 
@@ -140,9 +182,15 @@ export default function sidebar() {
     form.append(submitBtn)
     form.append(formDiv)
 
+
+    formTask.append(taskSubmitBtn, taskInput)
+    formTaskDiv.append(formTask)
+
     divSidebar.append(a)
-    divSidebar.append(btn)
+    divSidebar.append(btnProject)
+    divSidebar.append(btnTask)
     divSidebar.append(form)
+    divSidebar.append(formTaskDiv)
     divSidebar.append(hr)
     divSidebar.append(ul)
     divSidebar.append(divDivde)

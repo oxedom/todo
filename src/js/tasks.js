@@ -4,8 +4,39 @@ import { pubsub } from './pubsub.js';
 export default function tasks() {
 
 
-    const libsHelper = libs()
+    const Task = function (taskObj) {
 
+        let _taskName = taskObj.taskName
+        let dateCreated = new Date().getDate()
+
+        const removeSelf = () => {
+            pubsub.publish('removeTask')
+        }
+
+        const getName = (prop) => {
+            return _taskName
+        }
+
+        return { removeSelf, getName }
+    }
+
+    const taskLogic = (function () {
+        const _tasks = []
+
+        const addTask = (task) => {
+            _tasks.push(task)
+            console.log(_tasks);
+        }
+
+        const removeTask = (targetTask) => {
+            _tasks = _tasks.filter(t => t = !targetTask)
+        }
+
+        return { addTask, removeTask }
+    })()
+
+
+    const libsHelper = libs()
 
     const divBody = document.createElement('div')
     const divContainer = document.createElement('div')
@@ -33,7 +64,14 @@ export default function tasks() {
     divContainer.append(divRow)
     divBody.append(divContainer)
 
-    function createTask(taskObj) {
+
+    function createTaskMemory(taskObj) {
+        let newTask = Task(taskObj)
+        taskLogic.addTask(newTask)
+    }
+
+
+    function createTaskDom(taskObj) {
 
         const taskComp = document.createElement('div')
         const p = document.createElement('p')
@@ -46,13 +84,30 @@ export default function tasks() {
         libsHelper.stringToClass(btnDone, btnDoneClass)
         libsHelper.stringToClass(btnRemove, btnRemoveClass)
         taskComp.append(p, btnRemove, btnDone)
+        btnDone.innerText = 'DONE'
+        btnRemove.innerText = 'Remove'
+
+        p.innerText = taskObj.taskName
         p.style = 'flex-grow: 10'
-        // return taskComp
+        taskComp.append(p, btnRemove, btnDone)
+        return taskComp
 
     }
+
+
     function appendTask(task) {
-        divContainer.append(task)
+        divRow.append(task)
     }
+
+    pubsub.subscribe('newTask', (data) => {
+        const newTask = createTaskDom(data)
+        appendTask(newTask)
+    })
+
+    pubsub.subscribe('newTask', (data) => { createTaskMemory(data) })
+    pubsub.subscribe('removeTask', (task) => taskLogic.removeTask)
+
+
 
 
     return divBody
