@@ -131,7 +131,6 @@ export default function sidebar() {
 
 
     a.append(img, span)
-    divDivde.append(btn)
 
     formDiv.append(input)
     form.append(submitBtn)
@@ -139,11 +138,14 @@ export default function sidebar() {
 
     divSidebar.append(a)
     divSidebar.append(hr)
+    divSidebar.append(btn)
+    divSidebar.append(form)
     divSidebar.append(ul)
+
     divSidebar.append(hr)
     divSidebar.append(divDivde)
     divSidebar.append(hr)
-    divSidebar.append(form)
+
 
 
     return { divSidebar, createLi, ul }
