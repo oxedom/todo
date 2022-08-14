@@ -22,7 +22,7 @@ export default function sidebar() {
     const submitBtn = document.createElement('button')
     //Divder
     const divDivde = document.createElement('div');
-    const btnDivide = document.createElement('button');
+    const btn = document.createElement('button');
 
     //CLASS STRING FROM HTML BOILER PLATE
     const divSidebarClass = 'd-flex flex-column flex-shrink-0 p-3 bg-light col-3 border'
@@ -32,8 +32,8 @@ export default function sidebar() {
     // const hrClass = ''
     const ulClass = 'nav nav-pills flex-column mb-auto'
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
-    const btnDivideClass = 'btn btn-primay'
-    const formClass = 'form-group m-2 p-1 input-group'
+    const btnClass = 'btn btn-primay'
+    const formClass = 'form-group m-2 p-1 input-group invisible'
     const inputClass = 'form-control'
     const submitBtnClass = 'btn btn-outline-primary'
 
@@ -47,7 +47,7 @@ export default function sidebar() {
     // libsHelper.stringToClass(hr, hrClass)
     libsHelper.stringToClass(ul, ulClass)
     libsHelper.stringToClass(divDivde, divDivdeClass)
-    libsHelper.stringToClass(btnDivide, btnDivideClass)
+    libsHelper.stringToClass(btn, btnClass)
     libsHelper.stringToClass(form, formClass)
     libsHelper.stringToClass(input, inputClass)
     libsHelper.stringToClass(submitBtn, submitBtnClass)
@@ -55,30 +55,43 @@ export default function sidebar() {
     divSidebar.style = 'width: 280px;'
     span.innerText = 'Projects'
     img.style = 'width: 30px'
-    btnDivide.innerText = '+ New Project'
+    btn.innerText = '+ New Project'
     formDiv.style = 'width: 150px;'
     submitBtn.innerText = 'Add'
 
 
     img.setAttribute('src', '../sandbox/public/todo.svg')
     form.setAttribute('action', 'submit')
-
+    form.setAttribute('id', 'form')
     form.addEventListener('submit', (e) => {
         e.preventDefault()
-        pubsub.publish('formSubmit', e)
+        let value = e.target[1].value
+        pubsub.publish('liSubmit', value)
+        form.reset()
     })
-    btnDivide.addEventListener('click', (e) => {
-
-
-        ul.append(addProjectLi())
+    btn.addEventListener('click', (e) => {
+        pubsub.publish('toogleForm', 'form')
     })
+
+    function toogleElement(id) {
+        let element = document.getElementById(id)
+        if (element.classList.contains('invisible')) {
+            element.classList.remove('invisible')
+        }
+        else {
+            element.classList.add('invisible')
+        }
+
+    }
+
+    pubsub.subscribe('toogleForm', toogleElement)
 
     function logger(data) { console.log(data); }
 
-    pubsub.subscribe('formSubmit', logger)
+    pubsub.subscribe('liSubmit', createLi)
 
 
-    const addProjectLi = (text) => {
+    function createLi(text) {
 
         const li = document.createElement('li');
         const a = document.createElement('a');
@@ -106,13 +119,19 @@ export default function sidebar() {
         a.append(svg)
 
         li.append(a)
-
+        pubsub.publish('createLi', li)
         return li
     }
 
 
+    pubsub.subscribe('createLi', bindLi)
+    function bindLi(li) {
+        document.querySelector('ul').append(li)
+    }
+
+
     a.append(img, span)
-    divDivde.append(btnDivide)
+    divDivde.append(btn)
 
     formDiv.append(input)
     form.append(submitBtn)
@@ -127,7 +146,7 @@ export default function sidebar() {
     divSidebar.append(form)
 
 
-    return { divSidebar, addProjectLi, ul }
+    return { divSidebar, createLi, ul }
 
 }
 
