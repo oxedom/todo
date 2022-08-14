@@ -2,6 +2,7 @@
 
 import { it } from "date-fns/locale";
 import { libs } from "./libs";
+import { pubsub } from './pubsub.js';
 export default function sidebar() {
 
     //INIT LIBS
@@ -64,13 +65,17 @@ export default function sidebar() {
 
     form.addEventListener('submit', (e) => {
         e.preventDefault()
-        alert('cock')
+        pubsub.publish('formSubmit', e)
     })
     btnDivide.addEventListener('click', (e) => {
 
 
         ul.append(addProjectLi())
     })
+
+    function logger(data) { console.log(data); }
+
+    pubsub.subscribe('formSubmit', logger)
 
 
     const addProjectLi = (text) => {
