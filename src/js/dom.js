@@ -19,7 +19,7 @@ export default
             div.classList.add('row')
             div.append(_sidebar)
             content.append(div)
-            document.querySelector('ul').append(sidebar().addProjectLi())
+            // document.querySelector('ul').append(sidebar().addProjectLi())
 
 
 
