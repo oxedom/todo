@@ -33,7 +33,7 @@ export default function sidebar() {
     const ulClass = 'nav nav-pills flex-column mb-auto'
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
     const btnClass = 'btn btn-primay'
-    const formClass = 'form-group m-2 p-1 input-group invisible'
+    const formClass = 'form-group m-2 p-1 input-group d-none'
     const inputClass = 'form-control'
     const submitBtnClass = 'btn btn-outline-primary'
 
@@ -63,30 +63,33 @@ export default function sidebar() {
     img.setAttribute('src', '../sandbox/public/todo.svg')
     form.setAttribute('action', 'submit')
     form.setAttribute('id', 'form')
+    input.setAttribute('name', 'name')
+
     form.addEventListener('submit', (e) => {
         e.preventDefault()
         let value = e.target[1].value
         pubsub.publish('liSubmit', value)
         form.reset()
     })
+
+
+
     btn.addEventListener('click', (e) => {
         pubsub.publish('toogleForm', 'form')
     })
 
     function toogleElement(id) {
         let element = document.getElementById(id)
-        if (element.classList.contains('invisible')) {
-            element.classList.remove('invisible')
+        if (element.classList.contains('d-none')) {
+            element.classList.remove('d-none')
         }
         else {
-            element.classList.add('invisible')
+            element.classList.add('d-none')
         }
 
     }
 
     pubsub.subscribe('toogleForm', toogleElement)
-
-    function logger(data) { console.log(data); }
 
     pubsub.subscribe('liSubmit', createLi)
 
@@ -106,6 +109,7 @@ export default function sidebar() {
         libsHelper.stringToClass(li, liClass)
         libsHelper.stringToClass(a, aCLass)
         libsHelper.stringToClass(svg, svgClass)
+
 
         //a link Props
         a.innerText = text
@@ -137,14 +141,11 @@ export default function sidebar() {
     form.append(formDiv)
 
     divSidebar.append(a)
-    divSidebar.append(hr)
     divSidebar.append(btn)
     divSidebar.append(form)
+    divSidebar.append(hr)
     divSidebar.append(ul)
-
-    divSidebar.append(hr)
     divSidebar.append(divDivde)
-    divSidebar.append(hr)
 
 
 
