@@ -145,15 +145,27 @@ export default function sidebar() {
     formTask.addEventListener('submit', (e) => {
         e.preventDefault()
         let data = libsHelper.getFormData(e)
+        let selected = document.get
 
-        if (sidebarMemory.getLength() >= 1) {
-            pubsub.publish('newTask', data)
-            formTask.reset()
+        const project = document.querySelectorAll('[selected="true"]');
+        if(project.length == 0) {
+            alert('Need to Select Project')
         }
         else {
-            alert('NEED ATLEAST ONE PROJECT')
-        }
+            console.log('weeee wewwe');
 
+            console.log(project);
+            data.project = project[0].innerText
+            console.log((data));
+    
+            if (sidebarMemory.getLength() >= 1) {
+                pubsub.publish('newTask', data)
+                formTask.reset()
+            }
+            else {
+                alert('NEED ATLEAST ONE PROJECT')
+            }
+        }
 
     })
 

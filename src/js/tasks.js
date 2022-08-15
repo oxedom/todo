@@ -7,17 +7,22 @@ export default function tasks() {
     const Task = function (taskObj) {
 
         let _taskName = taskObj.taskName
+        let _taskProject = taskObj.project
         let dateCreated = new Date().getDate()
 
         const removeSelf = () => {
             pubsub.publish('removeTask')
         }
 
-        const getName = (prop) => {
+        const getTaskProject = () => {
+            return _taskProject
+        }
+
+        const getName = () => {
             return _taskName
         }
 
-        return { removeSelf, getName }
+        return { removeSelf, getName, getTaskProject }
     }
 
     const taskLogic = (function () {
@@ -75,23 +80,28 @@ export default function tasks() {
 
         const taskComp = document.createElement('div')
         const p = document.createElement('p')
+        const p2 = document.createElement('p')
         const btnDone = document.createElement('button')
         const btnRemove = document.createElement('button')
         const hr = document.createElement('hr')
 
         const pClass = 'm-2 col-xl'
+        const p2Class = 'm-2 col-l'
         const btnDoneClass = 'btn btn-outline-primary col-sm pl-2'
         const btnRemoveClass = 'btn btn-outline-danger col-sm'
         libsHelper.stringToClass(p, pClass)
+        libsHelper.stringToClass(p2,p2Class)
         libsHelper.stringToClass(btnDone, btnDoneClass)
         libsHelper.stringToClass(btnRemove, btnRemoveClass)
         taskComp.append(p, btnRemove, btnDone)
         btnDone.innerText = 'DONE'
         btnRemove.innerText = 'Remove'
-
+        console.log('aaaaaaaaaaaaa');
+        console.log(taskObj);
+        p2.innerText = `Belongs to Project group: ${taskObj.project}`
         p.innerText = taskObj.taskName
         p.style = 'flex-grow: 10'
-        taskComp.append(p, btnRemove, btnDone, hr)
+        taskComp.append(p,p2,btnRemove, btnDone, hr)
 
         btnDone.addEventListener('click', pubsub.publish('handleDone'))
         btnRemove.addEventListener('click', pubsub.publish('handleRemove'))
