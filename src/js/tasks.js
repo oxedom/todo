@@ -1,3 +1,4 @@
+import { el } from "date-fns/locale";
 import { libs } from "./libs";
 import { pubsub } from './pubsub.js';
 
@@ -26,15 +27,19 @@ export default function tasks() {
     }
 
     const taskLogic = (function () {
-        const _tasks = []
+        let _tasks = []
 
         const addTask = (task) => {
             _tasks.push(task)
             console.log(_tasks);
         }
 
-        const removeTask = (targetTask) => {
-            _tasks = _tasks.filter(t => t = !targetTask)
+        const removeTask = (id) => {
+
+            var index = _tasks.map(x => { return x.id;}).indexOf(id);
+
+            _tasks.splice(index,1)
+
         }
 
         return { addTask, removeTask }
@@ -78,6 +83,7 @@ export default function tasks() {
 
     function createTaskDom(taskObj) {
 
+
         const taskComp = document.createElement('div')
         const p = document.createElement('p')
         const p2 = document.createElement('p')
@@ -96,19 +102,30 @@ export default function tasks() {
         taskComp.append(p, btnRemove, btnDone)
         btnDone.innerText = 'DONE'
         btnRemove.innerText = 'Remove'
-        console.log('aaaaaaaaaaaaa');
         console.log(taskObj);
         p2.innerText = `Belongs to Project group: ${taskObj.project}`
         p.innerText = taskObj.taskName
         p.style = 'flex-grow: 10'
+        taskComp.setAttribute('id', taskObj.id)
         taskComp.append(p,p2,btnRemove, btnDone, hr)
 
-        btnDone.addEventListener('click', pubsub.publish('handleDone'))
-        btnRemove.addEventListener('click', pubsub.publish('handleRemove'))
+        btnDone.addEventListener('click', (e) => {pubsub.publish('handleDone', e.target.parentNode) })
+        btnRemove.addEventListener('click',(e) => {pubsub.publish('handleRemove', e.target.parentNode) })
 
         return taskComp
 
     }
+
+    pubsub.subscribe('handleRemove', removeFromDom )
+    pubsub.subscribe('handleRemove', removeFromObj )
+    function removeFromDom (el) {
+        el.remove()
+    }
+
+    function removeFromObj (el) {
+        taskLogic.removeTask(el.id)
+    }
+
 
 
     function appendTask(task) {

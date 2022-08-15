@@ -147,6 +147,7 @@ export default function sidebar() {
         let data = libsHelper.getFormData(e)
         let selected = document.get
 
+
         const project = document.querySelectorAll('[selected="true"]');
         if(project.length == 0) {
             alert('Need to Select Project')
@@ -156,7 +157,9 @@ export default function sidebar() {
 
             console.log(project);
             data.project = project[0].innerText
+            data.id = libsHelper.getID()
             console.log((data));
+
     
             if (sidebarMemory.getLength() >= 1) {
                 pubsub.publish('newTask', data)
