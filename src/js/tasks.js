@@ -106,6 +106,7 @@ export default function tasks() {
     }
 
     pubsub.subscribe('newTask', (data) => {
+
         const newTask = createTaskDom(data)
         appendTask(newTask)
     })

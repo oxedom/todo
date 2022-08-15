@@ -1,6 +1,6 @@
 
 
-import { it } from "date-fns/locale";
+import { it, ta } from "date-fns/locale";
 import { libs } from "./libs";
 import { pubsub } from './pubsub.js';
 export default function sidebar() {
@@ -41,7 +41,7 @@ export default function sidebar() {
     const imgClass = 'm-2'
     const spanClass = 'fs-4'
     // const hrClass = ''
-    const ulClass = 'nav nav-pills flex-column mb-auto bg-secondary bg-gradient'
+    const ulClass = 'nav nav-pills flex-column mb-auto'
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
     const btnProjectClass = 'btn btn-primay'
     const btnTaskClass = 'btn btn-primay m-2'
@@ -86,7 +86,7 @@ export default function sidebar() {
     //SETTING ATTS
     input.setAttribute('placeholder', 'New Project')
     taskInput.setAttribute('placeholder', 'New Task')
-
+    ul.setAttribute('id', 'projectUl')
     img.setAttribute('src', '../sandbox/public/todo.svg')
     formProject.setAttribute('action', 'submit')
     formProject.setAttribute('id', 'formProject')
@@ -97,6 +97,26 @@ export default function sidebar() {
     input.setAttribute('name', 'name')
 
 
+    const sidebarMemory = (function () {
+        const projects = []
+
+        const addProject = (p) => {
+            projects.push(p)
+            console.log(projects);
+        }
+
+        return { addProject }
+
+    }
+
+    )()
+
+    const Project = function (projectName) {
+        let name = projectName.name
+        let dateCreated = new Date().getDate()
+
+        return { name, dateCreated }
+    }
 
 
     //EVENT LISTNERS
@@ -105,10 +125,16 @@ export default function sidebar() {
         e.preventDefault()
         let data = libsHelper.getFormData(e)
         pubsub.publish('liSubmit', data.name)
-
+        pubsub.publish('newProject', data)
         formProject.reset()
     })
 
+    function handleNewProject(data) {
+        let newP = Project(data)
+        sidebarMemory.addProject(newP)
+    }
+
+    pubsub.subscribe('newProject', handleNewProject)
 
     formTask.addEventListener('submit', (e) => {
         e.preventDefault()
@@ -167,23 +193,30 @@ export default function sidebar() {
 
     pubsub.subscribe('projectClicked', changeBtnColor)
 
-    function changeBtnColor(target) {
-        if (target.classList.contains('active')) {
-            let others = target.parentNode.parentNode.children
-            others.forEach(li => {
-                li.classList.remove('active')
-                target.classList.add('active')
-            })
-        }
-        else {
-            let others = target.parentNode.parentNode.children
-            others.forEach(li => {
-                li.classList.remove('active')
-                target.classList.add('active')
-            })
+    pubsub.subscribe('projectClicked', setSelectedLi)
 
+
+    function setSelectedLi(target) {
+        let liList = document.getElementById('projectUl').childNodes
+        for (let index = 0; index < liList.length; index++) {
+            liList[index].removeAttribute('selected')
+            liList[index].childNodes.forEach(child => { child.removeAttribute('selected') })
+            target.setAttribute('selected', 'true')
         }
     }
+
+
+
+    function changeBtnColor(target) {
+        let liList = document.getElementById('projectUl').childNodes
+        for (let index = 0; index < liList.length; index++) {
+            liList[index].classList.remove('bg-success')
+            liList[index].childNodes.forEach(child => { child.classList.remove('bg-success') })
+
+        }
+        target.classList.add('bg-success')
+    }
+
 
 
     pubsub.subscribe('createLi', bindLi)
