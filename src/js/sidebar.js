@@ -105,7 +105,11 @@ export default function sidebar() {
             console.log(projects);
         }
 
-        return { addProject }
+        const getLength = () => {
+            return projects.length
+        }
+
+        return { addProject, getLength }
 
     }
 
@@ -129,6 +133,8 @@ export default function sidebar() {
         formProject.reset()
     })
 
+
+
     function handleNewProject(data) {
         let newP = Project(data)
         sidebarMemory.addProject(newP)
@@ -139,9 +145,16 @@ export default function sidebar() {
     formTask.addEventListener('submit', (e) => {
         e.preventDefault()
         let data = libsHelper.getFormData(e)
-        pubsub.publish('newTask', data)
-        console.log(data);
-        formTask.reset()
+
+        if (sidebarMemory.getLength() >= 1) {
+            pubsub.publish('newTask', data)
+            formTask.reset()
+        }
+        else {
+            alert('NEED ATLEAST ONE PROJECT')
+        }
+
+
     })
 
 

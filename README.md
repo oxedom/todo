@@ -71,3 +71,21 @@ Moudle DOM object.
 Moudle Logic Object
 Moudle App Logic
         
+
+
+
+//RECAP
+
+What I need the program to do
+Select the first Project automaticlly
+
+When a new task is created it will get pushed to the selected project array
+After it belongs to a project array it's status can be changed and deleted 
+When deleted it will be removed from array and THE DOM
+when changed it's status will change and it's DOM bg will color will be green
+
+When a differnet project task is toogled it will render only relevent tasks
+
+
+
+
