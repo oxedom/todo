@@ -7,7 +7,6 @@ export default
     (function () {
         //Hook for for content
 
-
         document.addEventListener('DOMContentLoaded', (e) => {
 
             let content = document.getElementById('content')
@@ -21,10 +20,6 @@ export default
             div.append(_sidebar)
             div.append(_tasks)
             content.append(div)
-            // document.querySelector('ul').append(sidebar().addProjectLi())
-
-
-
         })
 
 

@@ -32,7 +32,21 @@ export function libs() {
 
 
 
-    return { getID, classAdder, splitString, stringToClass, getFormData }
+    function toogleElement(id) {
+        let element = document.getElementById(id)
+        if (element.classList.contains('d-none')) {
+            element.classList.remove('d-none')
+        }
+        else {
+            element.classList.add('d-none')
+        }
+
+    }
+
+
+
+
+    return { getID, classAdder, splitString, stringToClass, getFormData, toogleElement }
 
 }
 

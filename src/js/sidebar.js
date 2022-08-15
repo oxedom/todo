@@ -16,7 +16,7 @@ export default function sidebar() {
     const hr = document.createElement('hr');
     const ul = document.createElement('ul')
 
-    const form = document.createElement('form')
+    const formProject = document.createElement('form')
     const formDiv = document.createElement('div')
 
     const formTask = document.createElement('form')
@@ -45,7 +45,7 @@ export default function sidebar() {
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
     const btnProjectClass = 'btn btn-primay'
     const btnTaskClass = 'btn btn-primay m-2'
-    const formClass = 'form-group m-2 p-1 input-group d-none'
+    const formProjectClass = 'form-group m-2 p-1 input-group d-none'
     const inputClass = 'form-control'
     const submitBtnClass = 'btn btn-outline-primary'
     const formTaskClass = 'form-group m-2 p-1 input-group d-none'
@@ -60,7 +60,7 @@ export default function sidebar() {
     libsHelper.stringToClass(divDivde, divDivdeClass)
     libsHelper.stringToClass(btnProject, btnProjectClass)
     libsHelper.stringToClass(btnTask, btnTaskClass)
-    libsHelper.stringToClass(form, formClass)
+    libsHelper.stringToClass(formProject, formProjectClass)
     libsHelper.stringToClass(formTask, formTaskClass)
     libsHelper.stringToClass(formTaskDiv, formTaskDivClass)
 
@@ -85,19 +85,19 @@ export default function sidebar() {
     taskInput.setAttribute('placeholder', 'New Task')
 
     img.setAttribute('src', '../sandbox/public/todo.svg')
-    form.setAttribute('action', 'submit')
-    form.setAttribute('id', 'form')
+    formProject.setAttribute('action', 'submit')
+    formProject.setAttribute('id', 'form')
     formTask.setAttribute('action', 'submit')
     formTask.setAttribute('id', 'formTask')
     formTask.setAttribute('name', 'taskForm')
     taskInput.setAttribute('name', 'taskName')
     input.setAttribute('name', 'name')
 
-    form.addEventListener('submit', (e) => {
+    formProject.addEventListener('submit', (e) => {
         e.preventDefault()
         let data = libsHelper.getFormData(e)
         pubsub.publish('liSubmit', data)
-        form.reset()
+        formProject.reset()
     })
 
 
@@ -112,26 +112,17 @@ export default function sidebar() {
 
 
     btnProject.addEventListener('click', (e) => {
-        pubsub.publish('toogleForm', 'form')
+        pubsub.publish('toogleForm', 'formProject')
     })
 
     btnTask.addEventListener('click', (e) => {
         pubsub.publish('toogleForm', 'formTask')
     })
 
-    function toogleElement(id) {
-        let element = document.getElementById(id)
-        if (element.classList.contains('d-none')) {
-            element.classList.remove('d-none')
-        }
-        else {
-            element.classList.add('d-none')
-        }
 
-    }
 
-    pubsub.subscribe('toogleForm', toogleElement)
-    pubsub.subscribe('toogleTask', toogleElement)
+    pubsub.subscribe('toogleForm', libsHelper.toogleElement)
+    pubsub.subscribe('toogleTask', libsHelper.toogleElement)
 
     pubsub.subscribe('liSubmit', createLi)
 
@@ -179,8 +170,8 @@ export default function sidebar() {
     a.append(img, span)
 
     formDiv.append(input)
-    form.append(submitBtn)
-    form.append(formDiv)
+    formProject.append(submitBtn)
+    formProject.append(formDiv)
 
 
     formTask.append(taskSubmitBtn, taskInput)
@@ -189,7 +180,7 @@ export default function sidebar() {
     divSidebar.append(a)
     divSidebar.append(btnProject)
     divSidebar.append(btnTask)
-    divSidebar.append(form)
+    divSidebar.append(formProject)
     divSidebar.append(formTaskDiv)
     divSidebar.append(hr)
     divSidebar.append(ul)
@@ -197,7 +188,7 @@ export default function sidebar() {
 
 
 
-    return { divSidebar, createLi, ul }
+    return { divSidebar }
 
 }
 
