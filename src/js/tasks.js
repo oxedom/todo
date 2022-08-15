@@ -1,4 +1,4 @@
-import { el } from "date-fns/locale";
+import { el, id } from "date-fns/locale";
 import { libs } from "./libs";
 import { pubsub } from './pubsub.js';
 
@@ -10,9 +10,13 @@ export default function tasks() {
         let _taskName = taskObj.taskName
         let _taskProject = taskObj.project
         let dateCreated = new Date().getDate()
+        let id = taskObj.id
+        let status = false
 
-        const removeSelf = () => {
-            pubsub.publish('removeTask')
+        const changeStatus = () => {
+            if(status) { status = false}
+            else { status = true}
+            console.log(status);
         }
 
         const getTaskProject = () => {
@@ -23,7 +27,10 @@ export default function tasks() {
             return _taskName
         }
 
-        return { removeSelf, getName, getTaskProject }
+        const getId = () => {
+            return id
+        }
+        return { getName, getTaskProject ,  getId, changeStatus}
     }
 
     const taskLogic = (function () {
@@ -36,13 +43,45 @@ export default function tasks() {
 
         const removeTask = (id) => {
 
-            var index = _tasks.map(x => { return x.id;}).indexOf(id);
+            let removeindex = undefined
+           for (let index = 0; index < _tasks.length; index++) {
+            if(_tasks[index].getId() == id ) {
+                
+                removeindex = index
+            }
+        
+            if(removeindex != undefined || removeindex != -1) {
+                _tasks.splice(removeindex, 1)
+            }
+           
+           }
 
-            _tasks.splice(index,1)
-
+     
         }
 
-        return { addTask, removeTask }
+        const changeStatusbyID = (id) => {
+
+            let taskIndex = undefined
+           for (let index = 0; index < _tasks.length; index++) {
+            if(_tasks[index].getId() == id ) {
+                
+                taskIndex = index
+            }
+        
+            if(taskIndex != undefined || taskIndex != -1) {
+                _tasks[taskIndex].changeStatus()
+            }
+           
+           }
+
+     
+        }
+
+
+
+
+
+        return { addTask, removeTask, changeStatusbyID}
     })()
 
 
@@ -116,11 +155,32 @@ export default function tasks() {
 
     }
 
+    pubsub.subscribe('handleDone', changeStatus)
+    pubsub.subscribe('handleDone', changeStatusDom)
     pubsub.subscribe('handleRemove', removeFromDom )
     pubsub.subscribe('handleRemove', removeFromObj )
     function removeFromDom (el) {
         el.remove()
     }
+
+
+    function changeStatus(element) {
+        let id = element.id
+        taskLogic.changeStatusbyID(id)
+    }
+
+    function changeStatusDom(element) {
+        const btn = element.childNodes[3]
+       
+        if(btn.classList.contains('btn-success')){
+            btn.classList.remove('btn-success')
+        }
+        else {
+            btn.classList.add('btn-success')
+        }
+        
+    }
+ 
 
     function removeFromObj (el) {
         taskLogic.removeTask(el.id)
