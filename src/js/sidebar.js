@@ -41,7 +41,7 @@ export default function sidebar() {
     const imgClass = 'm-2'
     const spanClass = 'fs-4'
     // const hrClass = ''
-    const ulClass = 'nav nav-pills flex-column mb-auto'
+    const ulClass = 'nav nav-pills flex-column mb-auto bg-secondary bg-gradient'
     const divDivdeClass = 'b-example-divider d-flex justify-content-center'
     const btnProjectClass = 'btn btn-primay'
     const btnTaskClass = 'btn btn-primay m-2'
@@ -50,6 +50,7 @@ export default function sidebar() {
     const submitBtnClass = 'btn btn-outline-primary'
     const formTaskClass = 'form-group m-2 p-1 input-group d-none'
     const formTaskDivClass = 'd-flex justify-content-center'
+    //CLASSING ELEMENTS
 
     libsHelper.stringToClass(divSidebar, divSidebarClass)
     libsHelper.stringToClass(img, imgClass)
@@ -70,7 +71,7 @@ export default function sidebar() {
     libsHelper.stringToClass(taskInput, inputClass)
 
 
-
+    //SETTINGS PROPS
     divSidebar.style = 'width: 280px;'
     span.innerText = 'Projects'
     img.style = 'width: 30px'
@@ -81,22 +82,30 @@ export default function sidebar() {
     submitBtn.innerText = '+'
     taskSubmitBtn.innerText = '+'
 
+
+    //SETTING ATTS
     input.setAttribute('placeholder', 'New Project')
     taskInput.setAttribute('placeholder', 'New Task')
 
     img.setAttribute('src', '../sandbox/public/todo.svg')
     formProject.setAttribute('action', 'submit')
-    formProject.setAttribute('id', 'form')
+    formProject.setAttribute('id', 'formProject')
     formTask.setAttribute('action', 'submit')
     formTask.setAttribute('id', 'formTask')
     formTask.setAttribute('name', 'taskForm')
     taskInput.setAttribute('name', 'taskName')
     input.setAttribute('name', 'name')
 
+
+
+
+    //EVENT LISTNERS
+
     formProject.addEventListener('submit', (e) => {
         e.preventDefault()
         let data = libsHelper.getFormData(e)
-        pubsub.publish('liSubmit', data)
+        pubsub.publish('liSubmit', data.name)
+
         formProject.reset()
     })
 
@@ -116,7 +125,7 @@ export default function sidebar() {
     })
 
     btnTask.addEventListener('click', (e) => {
-        pubsub.publish('toogleForm', 'formTask')
+        pubsub.publish('toogleTask', 'formTask')
     })
 
 
@@ -126,38 +135,54 @@ export default function sidebar() {
 
     pubsub.subscribe('liSubmit', createLi)
 
-
     function createLi(text) {
 
         const li = document.createElement('li');
         const a = document.createElement('a');
-        const svg = document.createElement('svg');
+
+
 
         const liClass = 'nav-item m-2'
         const aCLass = 'nav-link active'
-        const svgClass = 'bi me-2'
 
 
         // classes 
         libsHelper.stringToClass(li, liClass)
         libsHelper.stringToClass(a, aCLass)
-        libsHelper.stringToClass(svg, svgClass)
+
 
 
         //a link Props
         a.innerText = text
 
-        //SVG Props
 
-        svg.setAttribute('width', 16)
-        svg.setAttribute('height', 16)
-        // svg.setAttribute('xlink', '#speedometer2')
-
-        a.append(svg)
 
         li.append(a)
+
         pubsub.publish('createLi', li)
+        li.addEventListener('click', (e) => { pubsub.publish('projectClicked', e.target) })
         return li
+    }
+
+
+    pubsub.subscribe('projectClicked', changeBtnColor)
+
+    function changeBtnColor(target) {
+        if (target.classList.contains('active')) {
+            let others = target.parentNode.parentNode.children
+            others.forEach(li => {
+                li.classList.remove('active')
+                target.classList.add('active')
+            })
+        }
+        else {
+            let others = target.parentNode.parentNode.children
+            others.forEach(li => {
+                li.classList.remove('active')
+                target.classList.add('active')
+            })
+
+        }
     }
 
 

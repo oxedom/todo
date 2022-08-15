@@ -77,6 +77,8 @@ export default function tasks() {
         const p = document.createElement('p')
         const btnDone = document.createElement('button')
         const btnRemove = document.createElement('button')
+        const hr = document.createElement('hr')
+
         const pClass = 'm-2 col-xl'
         const btnDoneClass = 'btn btn-outline-primary col-sm pl-2'
         const btnRemoveClass = 'btn btn-outline-danger col-sm'
@@ -89,7 +91,11 @@ export default function tasks() {
 
         p.innerText = taskObj.taskName
         p.style = 'flex-grow: 10'
-        taskComp.append(p, btnRemove, btnDone)
+        taskComp.append(p, btnRemove, btnDone, hr)
+
+        btnDone.addEventListener('click', pubsub.publish('handleDone'))
+        btnRemove.addEventListener('click', pubsub.publish('handleRemove'))
+
         return taskComp
 
     }
