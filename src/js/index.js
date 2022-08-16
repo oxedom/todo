@@ -1,5 +1,5 @@
 
 
-import './dom'
+import "./dom";
 
 
