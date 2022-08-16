@@ -1,10 +1,7 @@
-
-
 import { it, ta } from "date-fns/locale";
 import { libs } from "./libs";
 import { pubsub } from "./pubsub.js";
 export default function sidebar() {
-
     // INIT LIBS
     const libsHelper = libs();
 
@@ -25,8 +22,6 @@ export default function sidebar() {
     const taskInput = document.createElement("input");
     const taskTextArea = document.createElement("area");
 
-
-
     const input = document.createElement("input");
     const submitBtn = document.createElement("button");
     // Divder
@@ -34,10 +29,11 @@ export default function sidebar() {
     const btnProject = document.createElement("button");
     const btnTask = document.createElement("button");
 
-
     // CLASS STRING FROM HTML BOILER PLATE
-    const divSidebarClass = "d-flex flex-column flex-shrink-0 p-3 bg-light col-3 border";
-    const aClass = "d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none";
+    const divSidebarClass =
+        "d-flex flex-column flex-shrink-0 p-3 bg-light col-3 border";
+    const aClass =
+        "d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none";
     const imgClass = "m-2";
     const spanClass = "fs-4";
     // const hrClass = ''
@@ -70,7 +66,6 @@ export default function sidebar() {
     libsHelper.stringToClass(taskSubmitBtn, submitBtnClass);
     libsHelper.stringToClass(taskInput, inputClass);
 
-
     // SETTINGS PROPS
     divSidebar.style = "width: 280px;";
     span.innerText = "Projects";
@@ -81,7 +76,6 @@ export default function sidebar() {
     formTaskDiv.style = "width: 200px";
     submitBtn.innerText = "+";
     taskSubmitBtn.innerText = "+";
-
 
     // SETTING ATTS
     input.setAttribute("placeholder", "New Project");
@@ -96,7 +90,6 @@ export default function sidebar() {
     taskInput.setAttribute("name", "taskName");
     input.setAttribute("name", "name");
 
-
     const sidebarMemory = (function () {
         const projects = [];
 
@@ -110,10 +103,7 @@ export default function sidebar() {
         };
 
         return { addProject, getLength };
-
-    }
-
-    )();
+    })();
 
     const Project = function (projectName) {
         const name = projectName.name;
@@ -121,7 +111,6 @@ export default function sidebar() {
 
         return { name, dateCreated };
     };
-
 
     // EVENT LISTNERS
 
@@ -133,8 +122,6 @@ export default function sidebar() {
         formProject.reset();
     });
 
-
-
     function handleNewProject(data) {
         const newP = Project(data);
         sidebarMemory.addProject(newP);
@@ -145,34 +132,26 @@ export default function sidebar() {
     formTask.addEventListener("submit", (e) => {
         e.preventDefault();
         const data = libsHelper.getFormData(e);
-        const selected = document.get;
 
-
-        const project = document.querySelectorAll("[selected=\"true\"]");
-        if (project.length == 0) {
+        const project = document.querySelectorAll('[selected="true"]');
+        if (project.length === 0) {
             alert("Need to Select Project");
-        }
-        else {
+        } else {
             console.log("weeee wewwe");
 
             console.log(project);
             data.project = project[0].innerText;
             data.id = libsHelper.getID();
-            console.log((data));
-
+            console.log(data);
 
             if (sidebarMemory.getLength() >= 1) {
                 pubsub.publish("newTask", data);
                 formTask.reset();
-            }
-            else {
+            } else {
                 alert("NEED ATLEAST ONE PROJECT");
             }
         }
-
     });
-
-
 
     btnProject.addEventListener("click", (e) => {
         pubsub.publish("toogleForm", "formProject");
@@ -182,85 +161,70 @@ export default function sidebar() {
         pubsub.publish("toogleTask", "formTask");
     });
 
-
-
     pubsub.subscribe("toogleForm", libsHelper.toogleElement);
     pubsub.subscribe("toogleTask", libsHelper.toogleElement);
 
     pubsub.subscribe("liSubmit", createLi);
 
     function createLi(text) {
-
-
-
         const li = document.createElement("li");
         const a = document.createElement("a");
-
-
 
         const liClass = "nav-item m-2";
         const aCLass = "nav-link active";
 
-
-        // classes 
+        // classes
         libsHelper.stringToClass(li, liClass);
         libsHelper.stringToClass(a, aCLass);
-
-
 
         // a link Props
         a.innerText = text;
 
-
-
         li.append(a);
 
         pubsub.publish("createLi", li);
-        li.addEventListener("click", (e) => { pubsub.publish("projectClicked", e.target); });
+        li.addEventListener("click", (e) => {
+            pubsub.publish("projectClicked", e.target);
+        });
         return li;
     }
-
 
     pubsub.subscribe("projectClicked", changeBtnColor);
 
     pubsub.subscribe("projectClicked", setSelectedLi);
 
-
     function setSelectedLi(target) {
         const liList = document.getElementById("projectUl").childNodes;
         for (let index = 0; index < liList.length; index++) {
             liList[index].removeAttribute("selected");
-            liList[index].childNodes.forEach(child => { child.removeAttribute("selected"); });
+            liList[index].childNodes.forEach((child) => {
+                child.removeAttribute("selected");
+            });
             target.setAttribute("selected", "true");
         }
     }
-
-
 
     function changeBtnColor(target) {
         const liList = document.getElementById("projectUl").childNodes;
         for (let index = 0; index < liList.length; index++) {
             liList[index].classList.remove("bg-success");
-            liList[index].childNodes.forEach(child => { child.classList.remove("bg-success"); });
-
+            liList[index].childNodes.forEach((child) => {
+                child.classList.remove("bg-success");
+            });
         }
         target.classList.add("bg-success");
     }
-
-
 
     pubsub.subscribe("createLi", bindLi);
     function bindLi(li) {
         document.querySelector("ul").append(li);
     }
 
-
     a.append(img, span);
 
     formDiv.append(input);
     formProject.append(submitBtn);
     formProject.append(formDiv);
-
 
     formTask.append(taskSubmitBtn, taskInput);
     formTaskDiv.append(formTask);
@@ -274,12 +238,9 @@ export default function sidebar() {
     divSidebar.append(ul);
     divSidebar.append(divDivde);
 
-
-
     return { divSidebar };
-
 }
 
-// Make a Small form unde the project GamepadButton, when new Project is pressed 
+// Make a Small form unde the project GamepadButton, when new Project is pressed
 // it shows the little form by showing it's visablity and when you press sumbit it calls pupsub
 // the calls add LI function

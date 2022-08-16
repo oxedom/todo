@@ -24,11 +24,13 @@ export default function tasks() {
         };
 
         const removeTask = (targetTask) => {
-            _tasks = _tasks.filter((t) => { t = !targetTask; });
+            _tasks = _tasks.filter((t) => {
+                t = !targetTask;
+            });
         };
 
         return { addTask, removeTask };
-    }());
+    })();
 
     const libsHelper = libs();
 
@@ -96,7 +98,9 @@ export default function tasks() {
         appendTask(newTask);
     });
 
-    pubsub.subscribe("newTask", (data) => { createTaskMemory(data); });
+    pubsub.subscribe("newTask", (data) => {
+        createTaskMemory(data);
+    });
     pubsub.subscribe("removeTask", (task) => taskLogic.removeTask);
 
     return divBody;
