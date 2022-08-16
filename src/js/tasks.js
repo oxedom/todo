@@ -199,7 +199,7 @@ export default function tasks() {
     })
 
     pubsub.subscribe('newTask', (data) => { createTaskMemory(data) })
-    pubsub.subscribe('removeTask', (task) => taskLogic.removeTask)
+ 
 
 
 

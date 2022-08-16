@@ -191,6 +191,8 @@ export default function sidebar() {
 
     function createLi(text) {
 
+        
+
         const li = document.createElement('li');
         const a = document.createElement('a');
 
